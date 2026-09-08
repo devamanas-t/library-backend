@@ -50,7 +50,9 @@ def errorHandling():
     return HTTPException(status_code=404,detail="not found")
 
 def updateBook(book,db_book):
+    # key = "book_name"  value = "Harry Potter" for next for it change key = "author"  value = "J.K. Rowling"
     for key,value in book.model_dump().items():
+        #db_book.book_name(key) = "Harry Potter"(value)
         setattr(db_book,key,value)
     return db_book
 
@@ -60,8 +62,7 @@ def update_by_name(book_name:str,book:schema.BookUpdate,db:Session = Depends(get
     db_book = db.query(model.Book).filter(model.Book.book_name == book_name).first()
     if not db_book:
         errorHandling()
-    for key,value in book.model_dump().items():  # key = "book_name"  value = "Harry Potter" for next for it change key = "author"  value = "J.K. Rowling"
-        setattr(db_book,key,value)               #db_book.book_name(key) = "Harry Potter"(value)
+    updateBook(book,db_book)             
     db.commit()
     db.refresh(db_book)
     return db_book
@@ -76,6 +77,15 @@ def update_by_id(book_id:int,book:schema.BookUpdate,db:Session = Depends(get_db)
     db.refresh(db_book)
     return db_book
 
-#now create another put for id then simple delete too then optimise it maximum 
+@app.delete("/books/delete/id/{book_id}",response_model=schema.BookBase)
+def delete_by_id(book_id:int,db:Session = Depends(get_db)):
+    db_book = db.query(model.Book).filter(model.Book.book_id == book_id).first()
+    if not db_book:
+        errorHandling()
+    db.delete(db_book)
+    db.commit()
+    return
+
+
 
     
