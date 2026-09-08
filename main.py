@@ -46,14 +46,32 @@ def show_all_with_journal(book_journal:str,db:Session = Depends(get_db)):
     journal = db.query(model.Book).filter(model.Book.journal == book_journal).all()
     return journal
 
+def errorHandling():
+    return HTTPException(status_code=404,detail="not found")
+
+def updateBook(book,db_book):
+    for key,value in book.model_dump().items():
+        setattr(db_book,key,value)
+    return db_book
+
 
 @app.put("/books/update/name/{book_name}",response_model=schema.BookUpdate)
 def update_by_name(book_name:str,book:schema.BookUpdate,db:Session = Depends(get_db)):
     db_book = db.query(model.Book).filter(model.Book.book_name == book_name).first()
     if not db_book:
-        raise HTTPException(status_code=404,detail="Book not found")
-    for key,value in book.model_dump().items():# key = "book_name"  value = "Harry Potter" for next for it change key = "author"  value = "J.K. Rowling"
-        setattr(db_book,key,value)#db_book.book_name(key) = "Harry Potter"(value)
+        errorHandling()
+    for key,value in book.model_dump().items():  # key = "book_name"  value = "Harry Potter" for next for it change key = "author"  value = "J.K. Rowling"
+        setattr(db_book,key,value)               #db_book.book_name(key) = "Harry Potter"(value)
+    db.commit()
+    db.refresh(db_book)
+    return db_book
+
+@app.put("/books/update/id/{book_id}",response_model=schema.BookUpdate)
+def update_by_id(book_id:int,book:schema.BookUpdate,db:Session = Depends(get_db)):
+    db_book = db.query(model.Book).filter(model.Book.book_id==book_id).first()
+    if not db_book:
+        errorHandling()
+    updateBook(book,db_book)
     db.commit()
     db.refresh(db_book)
     return db_book
