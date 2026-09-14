@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-#create get for /book-name,/auther-name/,/journal
+
 
 class ModelConfig(BaseModel):
     model_config={
