@@ -53,8 +53,8 @@ def show_all_books(db:Session = Depends(get_db)):
 #return by book name 
 @router.get("/books/name/{book_name}",response_model=book.BookRespose)
 def show_with_name(book_name:str,db:Session = Depends(get_db)):
-    fetch_from_db(db,book_name)
-    return db_book
+    return fetch_from_db(db,book_name)
+    
 
 
 
@@ -75,7 +75,7 @@ def show_all_with_journal(book_journal:str,db:Session = Depends(get_db)):
 
 @router.put("/books/update/name/{book_name}",response_model=book.BookUpdate)
 def update_by_name(book_name:str,book_data:book.BookUpdate,db:Session = Depends(get_db)):
-    fetch_from_db(db,book_name)#get db_book from the function
+    db_book=fetch_from_db(db,book_name)#get db_book from the function
     try:
         updateBook(book_data,db_book)   
 
