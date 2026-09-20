@@ -29,7 +29,6 @@ def fetch_from_db(db,book_name):
 #end of functions
 
 
-
 #post for create new records
 
 @router.post("/book/create",response_model=book.BookCreate)#here full including the id stuff
@@ -75,7 +74,7 @@ def show_all_with_journal(book_journal:str,db:Session = Depends(get_db)):
 
 @router.put("/books/update/name/{book_name}",response_model=book.BookUpdate)
 def update_by_name(book_name:str,book_data:book.BookUpdate,db:Session = Depends(get_db)):
-    db_book=fetch_from_db(db,book_name)#get db_book from the function
+    db_book=fetch_from_db(db,book_name)#get db_book from the functionb
     try:
         updateBook(book_data,db_book)   
 
@@ -110,3 +109,5 @@ def delete_by_id(book_id:int,db:Session = Depends(get_db)):
     db.delete(db_book)
     db.commit()
     return
+
+#only one issue to optimaze it is book qnt =0,still book availibility=true 
