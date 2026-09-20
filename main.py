@@ -4,7 +4,7 @@ from database import engine,Base
 from routers import books,users #connectin the book.py
 
 
-print(Base.metadata.tables.keys())
+#print(Base.metadata.tables.keys())
 
 Base.metadata.create_all(bind=engine)
 
