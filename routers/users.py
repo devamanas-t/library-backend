@@ -24,4 +24,15 @@ def create_user(user_data:user.UserCreate,db:Session = Depends(get_db)):
     db.refresh(db_user)
     return db_user
     
+@router.get("/user/all",response_model=list[user.UserResponse])
+def get_all_users(db:Session=Depends(get_db)):
+    db_user =db.query(User).all()
+    return db_user
 
+
+@router.get("/user/name/{user_data}",response_model=list[user.UserResponse])
+def get_user_by_name(user_data:str,db:Session=Depends(get_db)):
+    db_user=db.query(User).filter(User.user_name == user_data).all()
+    if not db_user:
+        raise errorHandling()
+    return db_user
