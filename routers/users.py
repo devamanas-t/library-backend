@@ -41,9 +41,23 @@ def get_user_by_name(user_data:str,db:Session=Depends(get_db)):
 @router.get("/user/phone/{user_data}",response_model=list[user.UserResponse])
 def get_user_by_phone(user_data:str,db:Session = Depends(get_db)):
     if len(user_data) != 10:
+        #through this error for debbuging
         print("not 10 numbers")
         raise errorHandling()
     db_user = db.query(User).filter(User.phone_no==user_data).all()
     if not db_user:
         raise errorHandling()
     return db_user
+
+@router.put("/user/update/name/{user_name}",response_model=user.UserResponse)
+def update_by_name(user_name:str,user_data:user.UserUpdate,db:Session = Depends(get_db)):
+    db_user=db.query(User).filter(User.user_name == user_name).first()
+    try:
+        for key,value in user_data.model_dump().items():
+            setattr(db_user,key,value)
+            db.commit()
+            db.refresh(db_user)
+            return db_user
+    except Exception:
+        db.rollback()
+        raise
