@@ -73,8 +73,6 @@ def show_all_with_journal(book_journal:str,db:Session = Depends(get_db)):
 
 
 
-
-
 @router.put("/books/update/id/{book_id}",response_model=book.BookUpdate)
 def update_by_id(book_id:int,book_data:book.BookUpdate,db:Session = Depends(get_db)):
     db_book = db.query(Book).filter(Book.book_id==book_id).first()

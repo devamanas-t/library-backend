@@ -53,7 +53,7 @@ def get_user_by_phone(user_data:str,db:Session = Depends(get_db)):
 #here get searches users if want to update select from frontend sent id to here
 
 @router.put("/user/update/id/{user_id}",response_model=user.UserResponse)
-def update_by_phone(user_id:int,user_data:user.UserUpdate,db:Session = Depends(get_db)):
+def update_by_id(user_id:int,user_data:user.UserUpdate,db:Session = Depends(get_db)):
         
     db_user = db.query(User).filter(User.user_id == user_id).first()
     try:
@@ -65,3 +65,13 @@ def update_by_phone(user_id:int,user_data:user.UserUpdate,db:Session = Depends(g
     except Exception:
         db.rollback()
         raise errorHandling()   
+@router.delete("/user/delete/id/{user_id}",response_model=user.UserResponse)
+def delete_by_id(user_id:int,db:Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.user_id == user_id).first()
+    if not db_user:
+        raise errorHandling()
+    db.delete(db_user)
+    db.commit()
+    return 
+
+
