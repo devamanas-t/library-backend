@@ -49,9 +49,13 @@ def get_user_by_phone(user_data:str,db:Session = Depends(get_db)):
         raise errorHandling()
     return db_user
 
-@router.put("/user/update/name/{user_name}",response_model=user.UserResponse)
-def update_by_name(user_name:str,user_data:user.UserUpdate,db:Session = Depends(get_db)):
-    db_user=db.query(User).filter(User.user_name == user_name).first()
+
+#here get searches users if want to update select from frontend sent id to here
+
+@router.put("/user/update/id/{user_id}",response_model=user.UserResponse)
+def update_by_phone(user_id:int,user_data:user.UserUpdate,db:Session = Depends(get_db)):
+        
+    db_user = db.query(User).filter(User.user_id == user_id).first()
     try:
         for key,value in user_data.model_dump().items():
             setattr(db_user,key,value)
@@ -60,4 +64,4 @@ def update_by_name(user_name:str,user_data:user.UserUpdate,db:Session = Depends(
             return db_user
     except Exception:
         db.rollback()
-        raise
+        raise errorHandling()   

@@ -5,6 +5,7 @@
 venv/
 myvenv/
 .venv/
+uvi.sh
 
 # Python cache
 __pycache__/

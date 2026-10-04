@@ -72,18 +72,7 @@ def show_all_with_journal(book_journal:str,db:Session = Depends(get_db)):
 
 
 
-@router.put("/books/update/name/{book_name}",response_model=book.BookUpdate)
-def update_by_name(book_name:str,book_data:book.BookUpdate,db:Session = Depends(get_db)):
-    db_book=fetch_from_db(db,book_name)#get db_book from the functionb
-    try:
-        updateBook(book_data,db_book)   
 
-        db.commit()
-        db.refresh(db_book)
-        return db_book
-    except Exception:
-        db.rollback()
-        raise
 
 
 @router.put("/books/update/id/{book_id}",response_model=book.BookUpdate)
@@ -111,3 +100,4 @@ def delete_by_id(book_id:int,db:Session = Depends(get_db)):
     return
 
 #only one issue to optimaze it is book qnt =0,still book availibility=true 
+#change the update function logic 
