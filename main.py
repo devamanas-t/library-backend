@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from models import book,user
+from models import book,user,borrow
 from database import engine,Base
 from routers import books,users #connectin the book.py
 

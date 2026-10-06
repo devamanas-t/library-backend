@@ -9,4 +9,5 @@ class Book(Base):
     auther_name = Column(String,index=True)
     journal = Column(String,index=True)
     no_of_books = Column(Integer)
-    is_available = Column(Boolean)
+    is_available = Column(Integer)#tell the number of books
+    #is borrowed column -> #tells borrod or not 
