@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from models import book,user,borrow
 from database import engine,Base
-from routers import books,users #connectin the book.py
+from routers import books,users,borrows #connectin the book.py
 
 
 #print(Base.metadata.tables.keys())
@@ -12,3 +12,4 @@ app = FastAPI()
 
 app.include_router(books.router)
 app.include_router(users.router)
+app.include_router(borrows.router)

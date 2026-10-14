@@ -13,8 +13,10 @@ router = APIRouter()
 @router.post("/user/create",response_model=user.UserResponse)
 def create_user(user_data:user.UserCreate,db:Session = Depends(get_db)):
     db_user = db.query(User).filter(
-        User.user_name == user_data.user_name and User.phone_no == user_data.phone_no
-    ).all() #checks the user alredy excists or not
+        User.user_name == user_data.user_name,User.phone_no == user_data.phone_no
+    ).first() #checks the user alredy excists or not 
+
+    ## must check the and will work inside the sqlalchemy
     
     if db_user:
         raise errorHandling()#find if the code runs after this raise condition
