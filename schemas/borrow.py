@@ -18,6 +18,7 @@ class BorrowResponse(CreateBorrow):
     user_name:str
     book_name:str
     phone_no:str
+    borrow_start:datetime
     return_date:datetime | None = None
     borrow_end:datetime 
 
@@ -26,4 +27,12 @@ class BorrowUpdate(BorrowBase):
 
 class BorrowReturn(ModelConfig):
     return_date:datetime | None = None
+
+class BorrowResponseNew(ModelConfig):
+    user_name:str
+    phone_no:str
+    book_name:str
+    borrow_start:datetime
+    borrow_end:datetime 
+
 

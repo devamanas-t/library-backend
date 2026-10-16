@@ -10,6 +10,6 @@ class Borrow(Base):
     
     borrow_start = Column(DateTime)
     borrow_end = Column(DateTime)
-    return_date = Column(DateTime)
+    return_date = Column(DateTime,nullable = True)
 
     #time login will calculate on the borrow router
