@@ -38,10 +38,13 @@ def crete_borrow(borrow_data:borrow.CreateBorrow,db:Session = Depends(get_db)):
     db.commit()
     db.refresh(db_borrow)
     return db_borrow
+
+
 @router.get("/borrow/get",response_model = list[borrow.BorrowResponseNew])
 def show_none_return(db:Session = Depends(get_db)):
     db_borrow = (
         db.query(
+            Borrow.borrow_id,
             User.user_name,
             User.phone_no,
             Book.book_name,
@@ -54,6 +57,34 @@ def show_none_return(db:Session = Depends(get_db)):
         .all()
     )
     return db_borrow
+
+
+@router.put("/borrow/return/{borrow_id}",response_model=borrow.BorrowResponse)
+def return_borrow(borrow_id:int,borrow_data:borrow.BorrowReturn,db:Session = Depends(get_db)):
+    db_borrow = db.query(Borrow).filter(Borrow.borrow_id==borrow_id).first()
     
+    if not db_borrow:
+        raise errorHandling()
     
+    try:
+        
+        if borrow_data.return_date is None:
+            db_borrow.return_date=datetime.now()
+        else:
+            db_borrow.return_date = borrow_data.return_date
+        
+        db.commit()
+        db.refresh(db_borrow)
+        return db_borrow
+    except Exception:
+        db.rollback()
+        raise
+
+
+
+
+    
+@router.put("/borrow/update/{borrow_id}",response_model = borrow.BorrowResponse)
+def update_borrow(borrow_id:int,borrow_data:borrow.BorrowUpdate,db:Session = Depends(get_db)):
+    pass  
     

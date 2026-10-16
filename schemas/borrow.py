@@ -9,6 +9,7 @@ class BorrowBase(ModelConfig):
     user_id:int
     book_id:int
     borrow_start:datetime |None = None
+    return_date:datetime | None = None
 
 class CreateBorrow(BorrowBase):
     pass
@@ -29,6 +30,7 @@ class BorrowReturn(ModelConfig):
     return_date:datetime | None = None
 
 class BorrowResponseNew(ModelConfig):
+    borrow_id:int
     user_name:str
     phone_no:str
     book_name:str
