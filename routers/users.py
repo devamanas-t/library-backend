@@ -59,11 +59,11 @@ def update_by_id(user_id:int,user_data:user.UserUpdate,db:Session = Depends(get_
         
     db_user = db.query(User).filter(User.user_id == user_id).first()
     try:
-        for key,value in user_data.model_dump().items():
+        for key,value in user_data.model_dump(exclude_unset=True).items():
             setattr(db_user,key,value)
-            db.commit()
-            db.refresh(db_user)
-            return db_user
+        db.commit()
+        db.refresh(db_user)
+        return db_user
     except Exception:
         db.rollback()
         raise errorHandling()   

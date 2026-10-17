@@ -5,6 +5,8 @@ from database import get_db
 from models.book import Book
 from schemas import book
 
+
+
 router = APIRouter()
 
 #functions lives here
@@ -14,7 +16,7 @@ def errorHandling():
 
 def updateBook(book,db_book):
     # key = "book_name"  value = "Harry Potter" for next for it change key = "author"  value = "J.K. Rowling"
-    for key,value in book.model_dump().items():
+    for key,value in book.model_dump(exclude_unset=True).items():
         #db_book.book_name(key) = "Harry Potter"(value)
         setattr(db_book,key,value)
     return db_book

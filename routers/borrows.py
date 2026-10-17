@@ -13,6 +13,7 @@ from routers.books import errorHandling
 
 router = APIRouter()
 
+#creating borrow record
 @router.post("/borrow/create",response_model=borrow.BorrowResponse)
 def crete_borrow(borrow_data:borrow.CreateBorrow,db:Session = Depends(get_db)):
     db_borrow = db.query(Borrow).filter(
@@ -39,7 +40,7 @@ def crete_borrow(borrow_data:borrow.CreateBorrow,db:Session = Depends(get_db)):
     db.refresh(db_borrow)
     return db_borrow
 
-
+# for borrow page api get api 
 @router.get("/borrow/get",response_model = list[borrow.BorrowResponseNew])
 def show_none_return(db:Session = Depends(get_db)):
     db_borrow = (
@@ -58,7 +59,7 @@ def show_none_return(db:Session = Depends(get_db)):
     )
     return db_borrow
 
-
+# for return api 
 @router.put("/borrow/return/{borrow_id}",response_model=borrow.BorrowResponse)
 def return_borrow(borrow_id:int,borrow_data:borrow.BorrowReturn,db:Session = Depends(get_db)):
     db_borrow = db.query(Borrow).filter(Borrow.borrow_id==borrow_id).first()
@@ -67,12 +68,8 @@ def return_borrow(borrow_id:int,borrow_data:borrow.BorrowReturn,db:Session = Dep
         raise errorHandling()
     
     try:
-        
-        if borrow_data.return_date is None:
-            db_borrow.return_date=datetime.now()
-        else:
-            db_borrow.return_date = borrow_data.return_date
-        
+        db_borrow.return_date=datetime.now()
+              
         db.commit()
         db.refresh(db_borrow)
         return db_borrow
@@ -80,11 +77,23 @@ def return_borrow(borrow_id:int,borrow_data:borrow.BorrowReturn,db:Session = Dep
         db.rollback()
         raise
 
-
-
-
-    
+# edit option for change date,person,book
 @router.put("/borrow/update/{borrow_id}",response_model = borrow.BorrowResponse)
 def update_borrow(borrow_id:int,borrow_data:borrow.BorrowUpdate,db:Session = Depends(get_db)):
-    pass  
+    db_borrow = db.query(Borrow).filter(Borrow.borrow_id==borrow_id).first()
+    if not db_borrow:
+        raise errorHandling()
+    try:
+          
+        for key,value in borrow_data.model_dump(exclude_unset=True).items():
+            setattr(db_borrow,key,value)
+        db.commit()
+        db.refresh(db_borrow)
+        return db_borrow
+    except Exception:
+        db.rollback()
+        raise errorHandling()  
+    
+
+
     
